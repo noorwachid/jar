@@ -57,11 +57,6 @@ table td {
     border-right-width: 0px;
     border-bottom-width: 0px;
 }
-table td:hover,
-table td:active {
-    background-color: #3e4246;
-}
-
 #buttonB,
 #buttonN,
 #buttonR {
@@ -70,13 +65,15 @@ table td:active {
     border-bottom-width: 0px;
 }
 
-#buttonB:hover,
-#buttonB:active,
-#buttonN:hover,
-#buttonN:active,
-#buttonR:hover,
-#buttonR:active {
-    background-color: #7E6BD6;
+@media (hover: hover) and (pointer: fine) {
+    table td:hover {
+        background-color: #3e4246;
+    }
+    #buttonB:hover,
+    #buttonN:hover,
+    #buttonR:hover {
+        background-color: #7E6BD6;
+    }
 }
 
 #buttonR,
