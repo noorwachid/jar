@@ -33,24 +33,6 @@ let items = {
 }
 let routes = [
     {
-        pattern: /M\/(\?+)/, 
-        callback: args => { 
-            settings.mode    = 'multiplication';
-            settings.a.type  = 'random';
-            settings.a.value = args[1].length;
-            settings.b.type  = 'random';
-            settings.b.value = args[1].length;
-        } 
-    }, {
-        pattern: /M\/(\?+)\/(\?+)/, 
-        callback: args => { 
-            settings.mode    = 'multiplication';
-            settings.a.type  = 'random';
-            settings.a.value = args[1].length;
-            settings.b.type  = 'random';
-            settings.b.value = args[2].length;
-        }
-    }, {
         pattern: /M\/(\?+)\/(\d+)/, 
         callback: args => { 
             settings.mode    = 'multiplication';
@@ -69,23 +51,23 @@ let routes = [
             settings.b.value = args[2].length;
         } 
     }, {
-        pattern: /A\/(\?+)/, 
+        pattern: /M\/(\?+)\/(\?+)/, 
         callback: args => { 
-            settings.mode    = 'addition';
-            settings.a.type  = 'random';
-            settings.a.value = args[1].length;
-            settings.b.type  = 'random';
-            settings.b.value = args[1].length;
-        } 
-    }, {
-        pattern: /A\/(\?+)\/(\?+)/, 
-        callback: args => { 
-            settings.mode    = 'addition';
+            settings.mode    = 'multiplication';
             settings.a.type  = 'random';
             settings.a.value = args[1].length;
             settings.b.type  = 'random';
             settings.b.value = args[2].length;
         }
+    }, {
+        pattern: /M\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'multiplication';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'random';
+            settings.b.value = args[1].length;
+        } 
     }, {
         pattern: /A\/(\?+)\/(\d+)/, 
         callback: args => { 
@@ -103,6 +85,24 @@ let routes = [
             settings.a.value = Number(args[1]);
             settings.b.type  = 'random';
             settings.b.value = args[2].length;
+        } 
+    }, {
+        pattern: /A\/(\?+)\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'addition';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'random';
+            settings.b.value = args[2].length;
+        }
+    }, {
+        pattern: /A\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'addition';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'random';
+            settings.b.value = args[1].length;
         } 
     }
 ];
