@@ -33,6 +33,24 @@ let items = {
 }
 let routes = [
     {
+        pattern: /M\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'multiplication';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'random';
+            settings.b.value = args[1].length;
+        } 
+    }, {
+        pattern: /M\/(\?+)\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'multiplication';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'random';
+            settings.b.value = args[2].length;
+        }
+    }, {
         pattern: /M\/(\?+)\/(\d+)/, 
         callback: args => { 
             settings.mode    = 'multiplication';
@@ -51,22 +69,40 @@ let routes = [
             settings.b.value = args[2].length;
         } 
     }, {
-        pattern: /M\/(\?+)\/(\?+)/, 
+        pattern: /A\/(\?+)/, 
         callback: args => { 
-            settings.mode    = 'multiplication';
-            settings.a.type  = 'random';
-            settings.a.value = args[1].length;
-            settings.b.type  = 'random';
-            settings.b.value = args[2].length;
-        } 
-    }, {
-        pattern: /M\/(\?+)/, 
-        callback: args => { 
-            settings.mode    = 'multiplication';
+            settings.mode    = 'addition';
             settings.a.type  = 'random';
             settings.a.value = args[1].length;
             settings.b.type  = 'random';
             settings.b.value = args[1].length;
+        } 
+    }, {
+        pattern: /A\/(\?+)\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'addition';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'random';
+            settings.b.value = args[2].length;
+        }
+    }, {
+        pattern: /A\/(\?+)\/(\d+)/, 
+        callback: args => { 
+            settings.mode    = 'addition';
+            settings.a.type  = 'random';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'literal';
+            settings.b.value = Number(args[2]);
+        } 
+    }, {
+        pattern: /A\/(\d+)\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'addition';
+            settings.a.type  = 'literal';
+            settings.a.value = Number(args[1]);
+            settings.b.type  = 'random';
+            settings.b.value = args[2].length;
         } 
     }
 ];
@@ -75,6 +111,7 @@ function entryPoint() {
     for (let i = 0; i < 10; ++i) {
         const number = numbers[i];
         number.addEventListener('click', ev => {
+            input.style.color = '#333';
             if (Number(input.textContent) === 0) {
                 input.textContent = i;
             } else {
@@ -83,18 +120,18 @@ function entryPoint() {
         });
     }
     point.addEventListener('click', ev => {
-        input.style.color = '#fff';
+        input.style.color = '#333';
         if (Number.isInteger(Number(input.textContent)) &&
             input.textContent[input.textContent.length - 1] !== '.') {
             input.textContent += '.';
         }
     });
     negate.addEventListener('click', ev => {
-        input.style.color = '#fff';
+        input.style.color = '#333';
         input.textContent = -Number(input.textContent);
     });
     backspace.addEventListener('click', ev => {
-        input.style.color = '#fff';
+        input.style.color = '#333';
         if (String(Math.abs(Number(input.textContent))).length < 2) {
             input.textContent = '0';
             return;
@@ -103,7 +140,7 @@ function entryPoint() {
         }
     });
     input.addEventListener('click', ev => {
-        input.style.color = '#fff';
+        input.style.color = '#333';
         input.textContent = '0';
     });
     generated.addEventListener('click', resetHandler);
@@ -140,7 +177,7 @@ function generateValues() {
     if (settings.a.type === 'random') {
         items.a = generateRandomNumber(settings.a.value);
     } else {
-        items.b = settings.a.value;
+        items.a = settings.a.value;
     }
     if (settings.b.type === 'random') {
         items.b = generateRandomNumber(settings.b.value);
@@ -150,7 +187,7 @@ function generateValues() {
 }
 
 function resetHandler(ev) {
-    input.style.color = '#fff';
+    input.style.color = '#333';
     input.textContent = '0';
     const condition = () => (items.a != items.ax && items.b != items.bx) ||
                             (items.a != items.ax && items.b == items.bx) ||
@@ -166,8 +203,11 @@ function resetHandler(ev) {
         }
 
         switch(settings.mode) {
+            case 'addition':
+                symbol = '+';
+                break;
             default:
-                symbol = '*';
+                symbol = '×';
                 break;
         }
 
@@ -179,16 +219,21 @@ function enterHandler(ev) {
     let result = 0;
 
     switch (settings.mode) {
+        case 'addition':
+            result = items.a + items.b;
+            break;
         default:
             result = items.a * items.b;
             break;
     }
 
+    console.log(result);
+
     if (Number(input.textContent) === result) {
-        input.style.color = '#0f0';
+        input.style.color = '#2a2';
         setTimeout(resetHandler, 1000);
     } else {
-        input.style.color = '#f00';
+        input.style.color = '#f22';
     }
 }
 
