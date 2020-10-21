@@ -10,8 +10,13 @@ echo '    <title>Matter</title>' >> index.html
 echo '    <link rel="stylesheet" href="style.css">' >> index.html
 echo '</head>' >> index.html
 echo '<body>' >> index.html
+echo '    <header>Jar</header>' >> index.html
+echo '    <main>' >> index.html
+echo '        <ul>' >> index.html
 
-find . -maxdepth 1 -type d -not -path '*.git*' -print0 | xargs -I {} -r0 echo '<a href="{}">{}</a>' >> index.html
+find . -mindepth 1 -maxdepth 1 -type d -not -path '*.git*' -print0 | xargs -I {} -r0 echo '<li><a href="{}">{}</a></li>' >> index.html
 
+echo '        </ul>' >> index.html
+echo '    </main>' >> index.html
 echo '</body>' >> index.html
 echo '</html>' >> index.html
