@@ -64,7 +64,7 @@ function clearHandler(ev) {
     inputL.textContent = '0';
 }
 
-function generateRandomNumber(length) {
+function generateFixedLengthNumber(length) {
     const tenth = Math.pow(10, length - 1);
     const total = tenth * 10;
 
@@ -88,12 +88,12 @@ function generateValues() {
     items.bx = items.b;
 
     if (settings.a.type === 'R') {
-        items.a = generateRandomNumber(settings.a.value);
+        items.a = generateFixedLengthNumber(settings.a.value);
     } else {
         items.a = settings.a.value;
     }
     if (settings.b.type === 'R') {
-        items.b = generateRandomNumber(settings.b.value);
+        items.b = generateFixedLengthNumber(settings.b.value);
     } else {
         items.b = settings.b.value;
     }
@@ -133,6 +133,14 @@ function reset() {
             case 'S':
                 symbol = '−';
                 break;
+            case 'U':
+                symbol = '−';
+                if (items.a < items.b) {
+                    const temp = items.a;
+                    items.a = items.b;
+                    items.b = temp;
+                }
+                break;
             default:
                 symbol = '×';
                 break;
@@ -171,21 +179,21 @@ function resetSquareBased() {
 
     function generate() {
         items.ax = items.a;
-        items.a = generateRandomNumber(settings.a.value);
+        items.a = settings.mode === 'O' 
+            ? generatePerfectSquare(settings.a.value)
+            : generateFixedLengthNumber(settings.a.value);
     }
     generate();
     while (items.a === items.ax) {
         generate();
-    }  
+    }
 
     switch (settings.mode) {
         case 'Q':
             generatedL.textContent = `${items.a}²`;
             break;
-        case 'O':
-            generatedL.textContent = `√${items.a ** 2}`;
-            break;
         case 'R':
+        case 'O':
             generatedL.textContent = `√${items.a}`;
             break;
     }
@@ -198,11 +206,11 @@ function checkSquareBased() {
         case 'Q':
             checkUserInput(userInput === items.a ** 2);
             break;
-        case 'O':
-            checkUserInput(userInput === items.a);
-            break;
         case 'R':
             checkUserInput(Math.abs(userInput - Math.sqrt(items.a)) < 0.05);
+            break;
+        case 'O':
+            checkUserInput(userInput === Math.sqrt(items.a));
             break;
     }
 }
@@ -210,10 +218,30 @@ function checkSquareBased() {
 function checkUserInput(cond) {
     if (cond) {
         inputL.style.color = '#2a2';
-        setTimeout(settings.reset, 1000);
+        setTimeout(settings.reset, 600);
     } else {
         inputL.style.color = '#f22';
     }
 }
 
 entryPoint();
+
+function generatePerfectSquare(length) {
+    const remainder = length % 2;
+    const diviant = Math.floor(length / 2);
+    const length2 = remainder + diviant;
+    const limit1 = 0.316 * (10 ** length2);
+    const limit2 = 0.999 * (10 ** length2);
+    let target = generateFixedLengthNumber(length2);
+
+    if (remainder === 1) {
+        while (target > limit1) {
+            target = generateFixedLengthNumber(length2);
+        }
+    } else {
+        while (target < limit1 || target > limit2) {
+            target = generateFixedLengthNumber(length2);
+        }
+    }
+    return target ** 2;
+}

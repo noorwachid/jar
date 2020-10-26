@@ -1,14 +1,18 @@
-// A      = add
-// M      = multiply
-// S      = substract
-// U      = perfect substract
-// D      = divide
-// I      = perfect divide
-// Q      = square
-// R      = square root
-// O      = perfect square root
-// \?+    = the length of random number (R)
-// [0-9]+ = literal number (L)
+// A      != add 
+// M      != multiply
+// S      != substract
+// U      ?= perfect substract
+// D      == divide
+// I      == perfect divide
+// Q      != square
+// R      != square root
+// O      != perfect square root
+// \?+    the length of random number (R)
+// [0-9]+ literal number (L)
+//
+// != implemented
+// ?= kind of implemented
+// == unimplemented
 
 let settings = {
     mode: 'M',
@@ -141,8 +145,7 @@ let routes = [
             settings.b.type  = 'R';
             settings.b.value = args[1].length;
         } 
-    },
-    {
+    }, {
         pattern: /S\/(\?+)\/(\d+)/, 
         callback: args => { 
             settings.mode    = 'S';
@@ -179,6 +182,50 @@ let routes = [
         pattern: /S\/(\?+)/, 
         callback: args => { 
             settings.mode    = 'S';
+            settings.reset   = reset;
+            settings.check   = check;
+            settings.a.type  = 'R';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'R';
+            settings.b.value = args[1].length;
+        } 
+    }, {
+        pattern: /U\/(\?+)\/(\d+)/, 
+        callback: args => { 
+            settings.mode    = 'U';
+            settings.reset   = reset;
+            settings.check   = check;
+            settings.a.type  = 'R';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'L';
+            settings.b.value = Number(args[2]);
+        } 
+    }, {
+        pattern: /U\/(\d+)\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'U';
+            settings.reset   = reset;
+            settings.check   = check;
+            settings.a.type  = 'L';
+            settings.a.value = Number(args[1]);
+            settings.b.type  = 'R';
+            settings.b.value = args[2].length;
+        } 
+    }, {
+        pattern: /U\/(\?+)\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'U';
+            settings.reset   = reset;
+            settings.check   = check;
+            settings.a.type  = 'R';
+            settings.a.value = args[1].length;
+            settings.b.type  = 'R';
+            settings.b.value = args[2].length;
+        }
+    }, {
+        pattern: /U\/(\?+)/, 
+        callback: args => { 
+            settings.mode    = 'U';
             settings.reset   = reset;
             settings.check   = check;
             settings.a.type  = 'R';
