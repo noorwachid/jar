@@ -1,113 +1,59 @@
+const distanceErrorAllowed = 0.05;
 
 let items = {
     a: 0,
     b: 0,
     ax: 0,
-    bx: 0
+    bx: 0,
+    result: 0,
+    factors: [], 
+    multiplicants: [],
 }
 
-function entryPoint() {
+function EntryPoint() {
     for (let i = 0; i < 10; ++i) {
-        numbersL[i].addEventListener('click', numberHandler);
+        numbersL[i].addEventListener('click', ev => {
+            NumberHandler(i);
+        });
     }
-    pointL.addEventListener('click', pointHandler);
-    negateL.addEventListener('click', negateHandler);
-    backspaceL.addEventListener('click', backspaceHandler);
-    inputL.addEventListener('click', clearHandler);
-    generatedL.addEventListener('click', resetHandler);
-    enterL.addEventListener('click', enterHandler);
-    addEventListener('hashchange', hashChangeHandler);
-    hashChangeHandler();
+    pointL.addEventListener('click', PointHandler);
+    negateL.addEventListener('click', NegateHandler);
+    backspaceL.addEventListener('click', BackspaceHandler);
+    inputL.addEventListener('click', ClearHandler);
+    generatedL.addEventListener('click', ResetHandler);
+    enterL.addEventListener('click', EnterHandler);
+    addEventListener('hashchange', HashChangeHandler);
+    addEventListener('keydown', KeyDownHandler);
+    HashChangeHandler();
 }
 
-function numberHandler(ev) {
-    const number = Number(ev.target.textContent);
-
-    inputL.style.color = '#333';
-    if (inputL.textContent === '0') {
-        inputL.textContent = number;
-    } else {
-        inputL.textContent += number;
-    }
-}
-function pointHandler(ev) {
-    function hasPoint(text) {
-        for (let i = 0; i < text.length; ++i) {
-            if (text[i] === '.') {
-                return true;
-            }
-        }
-        return false;
-    }
-    inputL.style.color = '#333';
-    if (!hasPoint(inputL.textContent)) {
-        inputL.textContent += '.';
-    }
-}
-function negateHandler(ev) {
-    inputL.style.color = '#333';
-    inputL.textContent = -Number(inputL.textContent);
-}
-function backspaceHandler(ev) {
-    inputL.style.color = '#333';
-    if (inputL.textContent[inputL.textContent.length - 1] === '.') {
-        inputL.textContent = inputL.textContent.slice(0, -1);
-    } else if (String(Math.abs(Number(inputL.textContent))).length === 1) {
-        inputL.textContent = '0';
-        return;
-    } else {
-        inputL.textContent = inputL.textContent.slice(0, -1);
-    }
-}
-function clearHandler(ev) {
-    inputL.style.color = '#333';
-    inputL.textContent = '0';
-}
-
-function generateFixedLengthNumber(length) {
-    const tenth = Math.pow(10, length - 1);
-    const total = tenth * 10;
-
-    return Math.floor(Math.random() * (total - tenth) + tenth);
-}
-
-function hashChangeHandler(ev) {
-    for (let i = 0; i < routes.length; ++i) {
-        if (routes[i].pattern.test(location.hash)) {
-            routes[i].callback(routes[i].pattern.exec(location.hash));
-            routeNotFound = false;
-            resetHandler();
-            return;
-        }
-    }
-    routeNotFound = true;
-}
-
-function generateValues() {
+function FillItems() {
     items.ax = items.a;
     items.bx = items.b;
 
     if (settings.a.type === 'R') {
-        items.a = generateFixedLengthNumber(settings.a.value);
+        items.a = GetRandomNumber(settings.a.length);
     } else {
         items.a = settings.a.value;
     }
     if (settings.b.type === 'R') {
-        items.b = generateFixedLengthNumber(settings.b.value);
+        items.b = GetRandomNumber(settings.b.length);
     } else {
         items.b = settings.b.value;
     }
 }
 
-function resetHandler(ev) {
-    settings.reset();
+function SwapItems() {
+    const temp = items.a;
+    items.a = items.b;
+    items.b = temp;
 }
 
-function enterHandler(ev) {
-    settings.check();
+function IsPreviousPair() {
+    return items.a === items.ax && items.b === items.bx;
 }
 
-function isPermutionPreviousPair() {
+function IsPermutionOfPreviousPair() {
     return (items.a != items.ax && items.b != items.bx) ||
         (items.a != items.ax && items.b == items.bx) ||
         (items.a != items.bx && items.b == items.ax) ||
@@ -115,133 +61,277 @@ function isPermutionPreviousPair() {
         (items.b != items.bx && items.a == items.ax);
 }
 
-function reset() {
+function InitializeBasic() {
+    if (settings.mode === 'SX' && (settings.a.length < settings.b.length)) {
+        generatedL.textContent = 'A is lesser than B';
+        settings.shutdown = true;
+        return;
+    }
+    settings.shutdown = false;
+}
+
+function ResetBasic() {
     inputL.style.color = '#333';
     inputL.textContent = '0';
     let symbol = '';
 
+    if (settings.shutdown) {
+        return;
+    }
+
     if (!routeNotFound) {
-        generateValues();
-        while (!isPermutionPreviousPair()) {
-            generateValues();
+        FillItems();
+        if (settings.mode === 'S' || settings.mode === 'D') {
+            while (IsPreviousPair()) {
+                FillItems();
+            }
+        } else {
+            while (!IsPermutionOfPreviousPair()) {
+                FillItems();
+            }
         }
 
         switch(settings.mode) {
             case 'A':
                 symbol = '+';
+                items.result = items.a + items.b;
+                break;
+            case 'M':
+                symbol = '×';
+                items.result = items.a * items.b;
                 break;
             case 'S':
                 symbol = '−';
+                items.result = items.a - items.b;
                 break;
-            case 'U':
-                symbol = '−';
-                if (items.a < items.b) {
-                    const temp = items.a;
-                    items.a = items.b;
-                    items.b = temp;
-                }
-                break;
-            default:
-                symbol = '×';
+            case 'D':
+                symbol = '/';
+                items.result = items.a / items.b;
                 break;
         }
 
         generatedL.textContent = `${items.a} ${symbol} ${items.b}`;
+        if (settings.v) {
+            inputL.textContent = items.result;
+        }
     }
 }
 
-function check() {
-    let result = 0;
+function CheckBasic() {
+    const userInput = Number(inputL.textContent);
 
     switch (settings.mode) {
+        case 'M':
+            CheckUserInput(items.result === userInput);
+            break;
         case 'A':
-            result = items.a + items.b;
+            CheckUserInput(items.result === userInput);
             break;
         case 'S':
-            result = items.a - items.b;
+        case 'SX':
+            CheckUserInput(items.result === userInput);
             break;
-        default:
-            result = items.a * items.b;
+        case 'D':
+            CheckUserInput(Math.abs(items.result - userInput) < distanceErrorAllowed);
             break;
-    }
-
-    if (Number(inputL.textContent) === result) {
-        inputL.style.color = '#2a2';
-        setTimeout(settings.reset, 1000);
-    } else {
-        inputL.style.color = '#f22';
+        case 'DX':
+            CheckUserInput(items.result === userInput);
     }
 }
 
-function resetSquareBased() {
+function ResetPerfectSubstraction() {   
     inputL.style.color = '#333';
     inputL.textContent = '0';
 
-    function generate() {
+    if (settings.shutdown) {
+        return;
+    }
+
+    if (settings.a.type === 'L' && settings.b.type === 'R') {
+        items.a = settings.a.value;
+        items.b = GetRandomNumber(settings.b.length);
+        while (IsPreviousPair() || items.a < items.b) {
+            items.b = GetRandomNumber(settings.b.length);
+        }
+    } else if (settings.a.type === 'R' && settings.b.type === 'L') {
+        items.a = GetRandomNumber(settings.a.length);
+        items.b = settings.b.value;
+        while (IsPreviousPair() || items.a < items.b) {
+            items.a = GetRandomNumber(settings.a.length);
+        }
+    } else {
+        FillItems();
+        if (items.a < items.b) {
+            SwapItems();
+        }
+        while (IsPreviousPair()) {
+            FillItems();
+            if (items.a < items.b) {
+                SwapItems();
+            }
+        }
+    }
+    generatedL.textContent = `${items.a} − ${items.b}`;
+    items.result = items.a - items.b;
+    if (settings.v) {
+        inputL.textContent = items.result;
+    }
+}
+
+function InitializePerfectDivision() {
+    if (settings.a.length < settings.b.length) {
+        generatedL.textContent = 'A is lesser than B';
+        settings.shutdown = true;
+        return;
+    }
+    settings.shutdown = false;
+    
+    if (settings.a.type === 'L' && settings.b.type === 'R') {
+        if (IsPrimeNumber(settings.a.value)) {
+            generatedL.textContent = 'A is a prime number';
+            settings.shutdown = true;
+        } else {
+            items.factors = GetFactorsOfNumber(settings.a.value)
+                .filter(item => String(item).length === settings.b.length);
+        }
+        return;
+    }
+    if (settings.a.type === 'R' && settings.b.type === 'L') {
+        let result = 1;
+        const max = 10 ** settings.a.length;
+
+        for (let i = 1; result < max; ++i) {
+            result = i * settings.b.value;
+            if (String(result).length === settings.a.length) {
+                items.multiplicants.push(result);
+            }
+        }
+        return;
+    }
+}
+
+function ResetPerfectDivision() {
+    inputL.style.color = '#333';
+    inputL.textContent = '0';
+
+    if (settings.shutdown) {
+        return;
+    }
+
+    if (settings.a.type === 'L' && settings.b.type === 'R') {
+        items.a = settings.a.value;
+        items.b = GetRandomItem(items.factors);
+    } else if (settings.a.type === 'R' && settings.b.type === 'L') {
+        items.a = GetRandomItem(items.multiplicants);
+        items.b = settings.b.value;
+    }
+
+    generatedL.textContent = `${items.a} / ${items.b}`;
+}
+
+function ResetSquareBased() {
+    inputL.style.color = '#333';
+    inputL.textContent = '0';
+
+    function Generate() {
         items.ax = items.a;
         items.a = settings.mode === 'O' 
-            ? generatePerfectSquare(settings.a.value)
-            : generateFixedLengthNumber(settings.a.value);
+            ? GetPerfectSquaredNumber(settings.a.length)
+            : GetRandomNumber(settings.a.length);
     }
-    generate();
+    Generate();
     while (items.a === items.ax) {
-        generate();
+        Generate();
     }
 
     switch (settings.mode) {
         case 'Q':
             generatedL.textContent = `${items.a}²`;
+            items.result = items.a ** 2;
             break;
         case 'R':
         case 'O':
             generatedL.textContent = `√${items.a}`;
+            items.result = Math.sqrt(items.a);
             break;
+    }
+    if (settings.v) {
+        inputL.textContent = items.result;
     }
 }
 
-function checkSquareBased() {
+function CheckSquareBased() {
     const userInput = Number(inputL.textContent);
 
     switch (settings.mode) {
         case 'Q':
-            checkUserInput(userInput === items.a ** 2);
+            CheckUserInput(userInput === items.result);
             break;
         case 'R':
-            checkUserInput(Math.abs(userInput - Math.sqrt(items.a)) < 0.05);
+            CheckUserInput(Math.abs(userInput - items.result) < distanceErrorAllowed);
             break;
         case 'O':
-            checkUserInput(userInput === Math.sqrt(items.a));
+            CheckUserInput(userInput === items.result);
             break;
     }
 }
 
-function checkUserInput(cond) {
+function CheckUserInput(cond) {
     if (cond) {
         inputL.style.color = '#2a2';
-        setTimeout(settings.reset, 600);
+        setTimeout(settings.Reset, 600);
     } else {
         inputL.style.color = '#f22';
     }
 }
 
-entryPoint();
-
-function generatePerfectSquare(length) {
+function GetPerfectSquaredNumber(length) {
     const remainder = length % 2;
     const diviant = Math.floor(length / 2);
     const length2 = remainder + diviant;
     const limit1 = 0.316 * (10 ** length2);
     const limit2 = 0.999 * (10 ** length2);
-    let target = generateFixedLengthNumber(length2);
+    let target = GetRandomNumber(length2);
 
     if (remainder === 1) {
         while (target > limit1) {
-            target = generateFixedLengthNumber(length2);
+            target = GetRandomNumber(length2);
         }
     } else {
         while (target < limit1 || target > limit2) {
-            target = generateFixedLengthNumber(length2);
+            target = GetRandomNumber(length2);
         }
     }
     return target ** 2;
+}
+
+function IsPrimeNumber(number) {
+    const squareRootNumber = Math.sqrt(number);
+    for (let i = 2; i <= squareRootNumber; ++i) {
+        if (number % i === 0) {
+            return false;
+        }
+    }
+    return number > 1;
+}
+
+function GetFactorsOfNumber(number) {
+    let list = [];
+    for (let i = 1; i <= number; ++i) {
+        if (number % i === 0) {
+            list.push(i);
+        }
+    }
+    return list;
+}
+
+function GetRandomNumber(length) {
+    const tenth = Math.pow(10, length - 1);
+    const total = tenth * 10;
+
+    return Math.floor(Math.random() * (total - tenth) + tenth);
+}
+
+function GetRandomItem(list) {
+    return list[Math.floor(Math.random() * list.length)];
 }
