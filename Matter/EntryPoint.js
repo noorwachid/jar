@@ -62,7 +62,7 @@ function IsPermutionOfPreviousPair() {
 }
 
 function InitializeBasic() {
-    if (settings.mode === 'SX' && (settings.a.length < settings.b.length)) {
+    if (settings.mode === 'Sx' && (settings.a.length < settings.b.length)) {
         generatedL.textContent = 'A is lesser than B';
         settings.shutdown = true;
         return;
@@ -121,20 +121,20 @@ function CheckBasic() {
     const userInput = Number(inputL.textContent);
 
     switch (settings.mode) {
-        case 'M':
-            CheckUserInput(items.result === userInput);
-            break;
         case 'A':
             CheckUserInput(items.result === userInput);
             break;
+        case 'M':
+            CheckUserInput(items.result === userInput);
+            break;
         case 'S':
-        case 'SX':
+        case 'Sx':
             CheckUserInput(items.result === userInput);
             break;
         case 'D':
             CheckUserInput(Math.abs(items.result - userInput) < distanceErrorAllowed);
             break;
-        case 'DX':
+        case 'Dx':
             CheckUserInput(items.result === userInput);
     }
 }
@@ -184,30 +184,27 @@ function InitializePerfectDivision() {
         settings.shutdown = true;
         return;
     }
-    settings.shutdown = false;
     
     if (settings.a.type === 'L' && settings.b.type === 'R') {
+        if (settings.a.value === 1) {
+            generatedL.textContent = 'A is one';
+            settings.shutdown = true;
+        }
         if (IsPrimeNumber(settings.a.value)) {
             generatedL.textContent = 'A is a prime number';
             settings.shutdown = true;
-        } else {
-            items.factors = GetFactorsOfNumber(settings.a.value)
-                .filter(item => String(item).length === settings.b.length);
+            return;
         }
+        items.factors = GetFactors(settings.a.value)
+            .filter(item => String(item).length === settings.b.length);
         return;
     }
     if (settings.a.type === 'R' && settings.b.type === 'L') {
-        let result = 1;
-        const max = 10 ** settings.a.length;
-
-        for (let i = 1; result < max; ++i) {
-            result = i * settings.b.value;
-            if (String(result).length === settings.a.length) {
-                items.multiplicants.push(result);
-            }
-        }
+        items.multiplicants = GetMultiplicants(settings.b.value, settings.a.length);
         return;
     }
+
+    settings.shutdown = false;
 }
 
 function ResetPerfectDivision() {
@@ -224,6 +221,9 @@ function ResetPerfectDivision() {
     } else if (settings.a.type === 'R' && settings.b.type === 'L') {
         items.a = GetRandomItem(items.multiplicants);
         items.b = settings.b.value;
+    } else {
+        items.b = GetRandomNumber(settings.b.length);
+        items.a = GetRandomItem(GetMultiplicants(items.b, settings.a.length));
     }
 
     generatedL.textContent = `${items.a} / ${items.b}`;
@@ -315,11 +315,25 @@ function IsPrimeNumber(number) {
     return number > 1;
 }
 
-function GetFactorsOfNumber(number) {
+function GetFactors(number) {
     let list = [];
     for (let i = 1; i <= number; ++i) {
         if (number % i === 0) {
             list.push(i);
+        }
+    }
+    return list;
+}
+
+function GetMultiplicants(number, length) {
+    let result = 1;
+    let list = [];
+    const max = 10 ** length;
+
+    for (let i = 1; result < max; ++i) {
+        result = i * number;
+        if (String(result).length === length) {
+            list.push(result);
         }
     }
     return list;

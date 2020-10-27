@@ -96,7 +96,7 @@ function HashChangeHandler() {
         }
     }
     routeNotFound = true;
-    generatedL.textContent = 'Unknown route.';
+    generatedL.textContent = 'Unknown route';
 }
 
 function ResetHandler() {

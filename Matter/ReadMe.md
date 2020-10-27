@@ -9,6 +9,6 @@ Code:
 - `D`, Division
 - `R`, Square root
 
-- `SX`, Non negative substraction
-- `DX`, Non fractions division
-- `RX`, Perfect square root
+- `Sx`, Non negative substraction
+- `Dx`, Non fractions division
+- `Rx`, Perfect square root

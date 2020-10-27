@@ -106,24 +106,24 @@ let routes = [
             SetSettings('S', InitializeBasic, ResetBasic, CheckBasic, 'R', args[1]);
         } 
     }, {
-        pattern: /SX\/(\?+)\/(\d+)/, 
+        pattern: /Sx\/(\?+)\/(\d+)/, 
         callback: args => { 
-            SetSettings('SX', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'R', args[1], 'L', args[2]);
+            SetSettings('Sx', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'R', args[1], 'L', args[2]);
         } 
     }, {
-        pattern: /SX\/(\d+)\/(\?+)/, 
+        pattern: /Sx\/(\d+)\/(\?+)/, 
         callback: args => { 
-            SetSettings('SX', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'L', args[1], 'R', args[2]);
+            SetSettings('Sx', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'L', args[1], 'R', args[2]);
         } 
     }, {
-        pattern: /SX\/(\?+)\/(\?+)/, 
+        pattern: /Sx\/(\?+)\/(\?+)/, 
         callback: args => { 
-            SetSettings('SX', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'R', args[1], 'R', args[2]);
+            SetSettings('Sx', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'R', args[1], 'R', args[2]);
         }
     }, {
-        pattern: /SX\/(\?+)/, 
+        pattern: /Sx\/(\?+)/, 
         callback: args => { 
-            SetSettings('SX', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'R', args[1]);
+            SetSettings('Sx', InitializeBasic, ResetPerfectSubstraction, CheckBasic, 'R', args[1]);
         } 
     }, {
         pattern: /D\/(\?+)\/(\d+)/, 
@@ -146,24 +146,24 @@ let routes = [
             SetSettings('D', InitializeBasic, ResetBasic, CheckBasic, 'R', args[1]);
         } 
     }, {
-        pattern: /DX\/(\?+)\/(\d+)/, 
+        pattern: /Dx\/(\?+)\/(\d+)/, 
         callback: args => { 
-            SetSettings('DX', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'R', args[1], 'L', args[2]);
+            SetSettings('Dx', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'R', args[1], 'L', args[2]);
         } 
     }, {
-        pattern: /DX\/(\d+)\/(\?+)/, 
+        pattern: /Dx\/(\d+)\/(\?+)/, 
         callback: args => { 
-            SetSettings('DX', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'L', args[1], 'R', args[2]);
+            SetSettings('Dx', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'L', args[1], 'R', args[2]);
         } 
     }, {
-        pattern: /DX\/(\?+)\/(\?+)/, 
+        pattern: /Dx\/(\?+)\/(\?+)/, 
         callback: args => { 
-            SetSettings('DX', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'R', args[1], 'R', args[2]);
+            SetSettings('Dx', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'R', args[1], 'R', args[2]);
         }
     }, {
-        pattern: /DX\/(\?+)/, 
+        pattern: /Dx\/(\?+)/, 
         callback: args => { 
-            SetSettings('DX', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'R', args[1]);
+            SetSettings('Dx', InitializePerfectDivision, ResetPerfectDivision, CheckBasic, 'R', args[1]);
         } 
     }, {
         pattern: /Q\/(\?+)/,
@@ -176,9 +176,9 @@ let routes = [
             SetSettings('R', InitializeBasic, ResetSquareBased, CheckSquareBased, 'R', args[1]);
         }
     }, {
-        pattern: /O\/(\?+)/,
+        pattern: /Rx\/(\?+)/,
         callback: args => {
-            SetSettings('Q', InitializeBasic, ResetSquareBased, CheckSquareBased, 'R', args[1]);
+            SetSettings('Rx', InitializeBasic, ResetSquareBased, CheckSquareBased, 'R', args[1]);
         }
     }
 ];
