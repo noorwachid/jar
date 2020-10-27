@@ -112,7 +112,9 @@ function ResetBasic() {
 
         generatedL.textContent = `${items.a} ${symbol} ${items.b}`;
         if (settings.v) {
-            inputL.textContent = items.result;
+            inputL.textContent = settings.mode === 'D' 
+                ? items.result.toFixed(2)
+                : items.result;
         }
     }
 }
@@ -238,6 +240,10 @@ function ResetPerfectDivision() {
     }
 
     generatedL.textContent = `${items.a} / ${items.b}`;
+    items.result = items.a / items.b;
+    if (settings.v) {
+        inputL.textContent = items.result;
+    }
 }
 
 function ResetSquareBased() {
@@ -267,7 +273,9 @@ function ResetSquareBased() {
             break;
     }
     if (settings.v) {
-        inputL.textContent = items.result;
+        inputL.textContent = settings.mode === 'R' 
+            ? items.result.toFixed(2)
+            : items.result;
     }
 }
 

@@ -89,7 +89,7 @@ function HashChangeHandler() {
             items.bx = 0;
             items.result = 0;
             items.factors = [];
-            items.multiplicants = [];
+            items.products = [];
             settings.Initialize();
             settings.Reset();
             return;
