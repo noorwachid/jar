@@ -2,7 +2,7 @@ let settings = {
     mode: 'M',
     Initialize: function() {},
     Reset: function() {},
-    check: function() {},
+    Check: function() {},
     shutdown: false,
     a: {
         type: 'L',
@@ -25,6 +25,7 @@ function SetSettings(mode, initCallback, resetCallback, checkCallback, typeA, va
         } else {
             item.value = Number(value);
         }
+        item.type = type;
         item.length = value.length;
     }
 
@@ -36,9 +37,7 @@ function SetSettings(mode, initCallback, resetCallback, checkCallback, typeA, va
     settings.mode = mode;
     settings.Initialize = initCallback;
     settings.Reset = resetCallback;
-    settings.check = checkCallback;
-    settings.a.type = typeA;
-    settings.b.type = typeB;
+    settings.Check = checkCallback;
     SetItem(settings.a, typeA, valueA);
     SetItem(settings.b, typeB, valueB);
 }

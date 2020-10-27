@@ -104,5 +104,5 @@ function ResetHandler() {
 }
 
 function EnterHandler() {
-    settings.check();
+    settings.Check();
 }
