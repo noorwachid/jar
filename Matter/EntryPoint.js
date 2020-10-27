@@ -210,10 +210,14 @@ function InitializePerfectDivision() {
 function ResetPerfectDivision() {
     inputL.style.color = '#333';
     inputL.textContent = '0';
-
+    items.ax = items.a;
+    items.bx = items.b;
+    
     if (settings.shutdown) {
         return;
     }
+
+    let lonely = false;
 
     if (settings.a.type === 'L' && settings.b.type === 'R') {
         items.a = settings.a.value;
@@ -221,9 +225,16 @@ function ResetPerfectDivision() {
     } else if (settings.a.type === 'R' && settings.b.type === 'L') {
         items.a = GetRandomItem(items.products);
         items.b = settings.b.value;
+        if (items.products.length === 1) {
+            lonely = true;
+        } 
     } else {
         items.b = GetRandomNumber(settings.b.length);
         items.a = GetRandomItem(GetProducts(items.b, settings.a.length));
+    }
+
+    if (!lonely && IsPreviousPair()) {
+        ResetPerfectDivision();
     }
 
     generatedL.textContent = `${items.a} / ${items.b}`;
