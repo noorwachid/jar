@@ -1,3 +1,7 @@
+# Matter
+Basic math question generator.
+I use it to train my mental math skill.
+
 `/#/Code/Arg1/Arg2`
 
 Code:
