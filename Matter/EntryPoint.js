@@ -7,7 +7,7 @@ let items = {
     bx: 0,
     result: 0,
     factors: [], 
-    multiplicants: [],
+    products: [],
 }
 
 function EntryPoint() {
@@ -200,7 +200,7 @@ function InitializePerfectDivision() {
         return;
     }
     if (settings.a.type === 'R' && settings.b.type === 'L') {
-        items.multiplicants = GetMultiplicants(settings.b.value, settings.a.length);
+        items.products = GetProducts(settings.b.value, settings.a.length);
         return;
     }
 
@@ -219,11 +219,11 @@ function ResetPerfectDivision() {
         items.a = settings.a.value;
         items.b = GetRandomItem(items.factors);
     } else if (settings.a.type === 'R' && settings.b.type === 'L') {
-        items.a = GetRandomItem(items.multiplicants);
+        items.a = GetRandomItem(items.products);
         items.b = settings.b.value;
     } else {
         items.b = GetRandomNumber(settings.b.length);
-        items.a = GetRandomItem(GetMultiplicants(items.b, settings.a.length));
+        items.a = GetRandomItem(GetProducts(items.b, settings.a.length));
     }
 
     generatedL.textContent = `${items.a} / ${items.b}`;
@@ -325,7 +325,7 @@ function GetFactors(number) {
     return list;
 }
 
-function GetMultiplicants(number, length) {
+function GetProducts(number, length = 1) {
     let result = 1;
     let list = [];
     const max = 10 ** length;
