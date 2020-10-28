@@ -13,35 +13,68 @@ body {
     font-family: "Noto Sans", "Roboto", "Segoe UI", "Arial" sans-serif;
 }
 
-main {
+#begin-scene,
+#end-scene,
+#main-scene {
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     max-width: 500px;
+    text-align: right;
 }
 
 @media (max-width: 500px) {
-    main {
+    #main-scene {
         margin-top: 0px;
+    }
+    #begin-scene,
+    #end-scene {
+        padding: 10px 30px;
     }
 }
 
-#generated,
-#input {
+#title,
+#score {
+    font-size: 30px;
+}
+#subtitle,
+#subscore {
+    color: #aaa;
+    margin-bottom: 20px;
+}
+#list {
+    margin-bottom: 20px;
+}
+
+.wrong {
+    color: #D28B98;
+}
+
+button {
+    border: 1px solid #7E6BD6;
+    background-color: #5E4BB6;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 20px;
+    
+}
+
+#display-container {
     background-color: #fafafa;
     word-wrap: anywhere;
     text-align: right;
-    border-bottom-width: 0px;
+    padding: 20px 25px;
 }
 #generated {
-    padding: 20px 25px 10px 25px;
     font-size: 30px;
     color: #777;
 }
 #input {
-    padding: 10px 25px 20px 25px;
     font-size: 40px;
     color: #333;
+}
+#info {
+    color: #777;
 }
 
 table {
@@ -73,6 +106,9 @@ table td {
     #buttonB:hover,
     #buttonN:hover,
     #buttonR:hover {
+        background-color: #7E6BD6;
+    }
+    button:hover {
         background-color: #7E6BD6;
     }
 }

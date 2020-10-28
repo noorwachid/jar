@@ -1,4 +1,4 @@
-`/#/Code/Arg1/Arg2`
+`/#/Code/Arg...`
 
 Code:
 - `A`, Addition
@@ -12,3 +12,7 @@ Code:
 - `Sx`, Non negative substraction
 - `Dx`, Non fractions division
 - `Rx`, Perfect square root
+
+- `L`, Limit the question
+- `T`, Limit the time
+- `V`, Cheat

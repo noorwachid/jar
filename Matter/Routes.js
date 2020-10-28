@@ -4,6 +4,8 @@ let settings = {
     Reset: function() {},
     Check: function() {},
     shutdown: false,
+    time: 0, // in seconds
+    limit: 0,
     a: {
         type: 'L',
         value: 0,
@@ -167,17 +169,17 @@ let routes = [
     }, {
         pattern: /Q\/(\?+)/,
         callback: args => {
-            SetSettings('Q', InitializeBasic, ResetSquareBased, CheckSquareBased, 'R', args[1]);
+            SetSettings('Q', InitializeSquareBased, ResetSquareBased, CheckSquareBased, 'R', args[1]);
         }
     }, {
         pattern: /R\/(\?+)/,
         callback: args => {
-            SetSettings('R', InitializeBasic, ResetSquareBased, CheckSquareBased, 'R', args[1]);
+            SetSettings('R', InitializeSquareBased, ResetSquareBased, CheckSquareBased, 'R', args[1]);
         }
     }, {
         pattern: /Rx\/(\?+)/,
         callback: args => {
-            SetSettings('Rx', InitializeBasic, ResetSquareBased, CheckSquareBased, 'R', args[1]);
+            SetSettings('Rx', InitializeSquareBased, ResetSquareBased, CheckSquareBased, 'R', args[1]);
         }
     }
 ];

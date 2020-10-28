@@ -76,30 +76,66 @@ function ClearHandler() {
 }
 
 function HashChangeHandler() {
-    if (/V/.test(location.hash)) {
+    items.a = 0;
+    items.ax = 0;
+    items.b = 0;
+    items.bx = 0;
+    items.result = 0;
+    items.factors = [];
+    items.products = [];
+    items.inputs = [];
+    items.time = 0;
+    items.limit = 0;
+    settings.time = 0;
+    settings.limit = 0;
+
+    subtitleL.textContent = '';
+
+    beginSceneL.hidden = false;
+    mainSceneL.hidden = true;
+    endSceneL.hidden = true;
+
+    const vPattern = /V/;
+    const timePattern = /T\/(\d+):?(\d+)?/;
+    const limitPattern = /L\/(\d+)/;
+    if (vPattern.test(location.hash)) {
         settings.v = true;
     }
+    if (limitPattern.test(location.hash)) {
+        const results = limitPattern.exec(location.hash);
+        settings.limit = Number(results[1]);
+        subtitleL.textContent += `
+            ${settings.limit} question${settings.limit > 1 ? 's' : ''} · 
+        `;
+    }
+    if (timePattern.test(location.hash)) {
+        const results = timePattern.exec(location.hash);
+        if (results[2]) {
+            settings.time = (Number(results[1]) * 60) + Number(results[2]);
+        } else {
+            settings.time = Number(results[1]);
+        }
+        subtitleL.textContent += `${SecondsToString(settings.time)} · `;
+    }
+
     for (let i = 0; i < routes.length; ++i) {
         if (routes[i].pattern.test(location.hash)) {
             routes[i].callback(routes[i].pattern.exec(location.hash));
             routeNotFound = false;
-            items.a = 0;
-            items.ax = 0;
-            items.b = 0;
-            items.bx = 0;
-            items.result = 0;
-            items.factors = [];
-            items.products = [];
+
             settings.Initialize();
             settings.Reset();
             return;
         }
     }
     routeNotFound = true;
-    generatedL.textContent = 'Unknown route';
+    titleL.textContent = 'Error';
+    subtitleL.textContent = 'Unknown route';
+    startButtonL.hidden = true;
 }
 
 function ResetHandler() {
+
     settings.Reset();
 }
 

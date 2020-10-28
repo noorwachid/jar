@@ -7,9 +7,25 @@
     <link rel="stylesheet" href="Global.css">
 </head>
 <body>
-    <main>
-        <div id="generated">0</div>
-        <div id="input">0</div>
+    <section id="begin-scene">
+        <div id="title"></div>
+        <div id="subtitle"></div>
+        <button id="start-button">Start</button>
+    </section>
+
+    <section id="end-scene" hidden>
+        <div id="score"></div>
+        <div id="subscore"></div>
+        <div id="list"></div>
+        <button id="restart-button">Restart</button>
+    </section>
+
+    <section id="main-scene" hidden>
+        <div id="display-container">
+            <div id="info"></div>
+            <div id="generated">0</div>
+            <div id="input">0</div>
+        </div>
         <table>
             <tr>
                 <td id="button7">7</td>
@@ -34,7 +50,8 @@
                 <td id="buttonP" class="bottom">.</td>
             </tr>
         </table>
-    </main>
+    </section>
+
     <script src="Elements.js"></script>
     <script src="Routes.js"></script>
     <script src="EntryPoint.js"></script>

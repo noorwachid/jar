@@ -1,4 +1,7 @@
 const distanceErrorAllowed = 0.05;
+let beginTimePoint = 0;
+let timerIntervalId = 0;
+let generated = '';
 
 let items = {
     a: 0,
@@ -8,6 +11,9 @@ let items = {
     result: 0,
     factors: [], 
     products: [],
+    inputs: [],
+    time: 0,
+    limit: 0,
 }
 
 function EntryPoint() {
@@ -24,6 +30,27 @@ function EntryPoint() {
     enterL.addEventListener('click', EnterHandler);
     addEventListener('hashchange', HashChangeHandler);
     addEventListener('keydown', KeyDownHandler);
+    startButtonL.addEventListener('click', ev => {
+        beginSceneL.hidden = true;
+        mainSceneL.hidden = false;
+        endSceneL.hidden = true;
+        beginTimePoint = performance.now();
+        if (settings.time > 0) {
+            items.time = settings.time;
+            UpdateInfo();
+            --items.time;
+            timerIntervalId = setInterval(() => {
+                UpdateInfo();
+                --items.time;
+                if (items.time < 0) {
+                    clearInterval(intervalId);
+                    settings.Check();
+                    ShowScore();
+                }
+            }, 1000);
+        }
+    });
+    restartButtonL.addEventListener('click', HashChangeHandler);
     HashChangeHandler();
 }
 
@@ -63,16 +90,46 @@ function IsPermutionOfPreviousPair() {
 
 function InitializeBasic() {
     if (settings.mode === 'Sx' && (settings.a.length < settings.b.length)) {
-        generatedL.textContent = 'A is lesser than B';
+        titleL.textContent = 'Error';
+        subtitleL.textContent = 'A is lesser than B';
+        startButtonL.hidden = true;
         settings.shutdown = true;
         return;
     }
     settings.shutdown = false;
+    
+    switch (settings.mode) {
+        case 'A':
+            titleL.textContent = 'Addition';
+            break;
+        case 'M':
+            titleL.textContent = 'Multiplication';
+            break;
+        case 'S':
+        case 'Sx':
+            titleL.textContent = 'Substraction';
+            break;
+        case 'D':
+            titleL.textContent = 'Division';
+            break;
+    }
+
+    subtitleL.textContent += `
+        ${settings.a.length} digit${settings.a.length > 1 ? 's' : ''}
+        by ${settings.b.length} digit${settings.b.length > 1 ? 's' : ''}
+    `;
+    if (settings.mode == 'Sx') {
+        subtitleL.textContent += ' · non negative result';
+    }
 }
 
 function ResetBasic() {
     inputL.style.color = '#333';
     inputL.textContent = '0';
+
+    items.limit += 1;
+    UpdateInfo();
+
     let symbol = '';
 
     if (settings.shutdown) {
@@ -110,7 +167,8 @@ function ResetBasic() {
                 break;
         }
 
-        generatedL.textContent = `${items.a} ${symbol} ${items.b}`;
+        generated = `${items.a} ${symbol} ${items.b}`;
+        generatedL.textContent = generated;
         if (settings.v) {
             inputL.textContent = settings.mode === 'D' 
                 ? items.result.toFixed(2)
@@ -145,6 +203,9 @@ function ResetPerfectSubstraction() {
     inputL.style.color = '#333';
     inputL.textContent = '0';
 
+    items.limit += 1;
+    UpdateInfo();
+
     if (settings.shutdown) {
         return;
     }
@@ -173,7 +234,8 @@ function ResetPerfectSubstraction() {
             }
         }
     }
-    generatedL.textContent = `${items.a} − ${items.b}`;
+    generated = `${items.a} − ${items.b}`;
+    generatedL.textContent = generated;
     items.result = items.a - items.b;
     if (settings.v) {
         inputL.textContent = items.result;
@@ -182,18 +244,24 @@ function ResetPerfectSubstraction() {
 
 function InitializePerfectDivision() {
     if (settings.a.length < settings.b.length) {
-        generatedL.textContent = 'A is lesser than B';
+        titleL.textContent = 'Error';
+        subtitleL.textContent = 'A is lesser than B';
+        startButtonL.hidden = true;
         settings.shutdown = true;
         return;
     }
     
     if (settings.a.type === 'L' && settings.b.type === 'R') {
         if (settings.a.value === 1) {
-            generatedL.textContent = 'A is one';
+            titleL.textContent = 'Error';
+            subtitleL.textContent = 'A is one';
+            startButtonL.hidden = true;
             settings.shutdown = true;
         }
         if (IsPrimeNumber(settings.a.value)) {
-            generatedL.textContent = 'A is a prime number';
+            titleL.textContent = 'Error';
+            subtitleL.textContent = 'A is a prime number';
+            startButtonL.hidden = true;
             settings.shutdown = true;
             return;
         }
@@ -207,11 +275,22 @@ function InitializePerfectDivision() {
     }
 
     settings.shutdown = false;
+    titleL.textContent = 'Division';
+    subtitleL.textContent += `
+        ${settings.a.length} digit${settings.a.length > 1 ? 's' : ''}
+        by
+        ${settings.b.length} digit${settings.b.length > 1 ? 's' : ''}
+        · non fraction result
+    `;
 }
 
 function ResetPerfectDivision() {
     inputL.style.color = '#333';
     inputL.textContent = '0';
+
+    items.limit += 1;
+    UpdateInfo();
+
     items.ax = items.a;
     items.bx = items.b;
     
@@ -239,16 +318,38 @@ function ResetPerfectDivision() {
         ResetPerfectDivision();
     }
 
-    generatedL.textContent = `${items.a} / ${items.b}`;
+    generated = `${items.a} / ${items.b}`;
+    generatedL.textContent = generated;
     items.result = items.a / items.b;
     if (settings.v) {
         inputL.textContent = items.result;
     }
 }
 
+function InitializeSquareBased() {
+    switch (settings.mode) {
+        case 'Q':
+            titleL.textContent = 'Square';
+            break;
+        case 'R':
+        case 'Rx':
+            titleL.textContent = 'Square Root';
+            break;
+    }
+    subtitleL.textContent += `
+        ${settings.a.length} digit${settings.a.length > 1 ? 's' : ''}
+    `;
+    if (settings.mode === 'Rx') {
+        subtitleL.textContent += ' · non fraction result';
+    }
+}
+
 function ResetSquareBased() {
     inputL.style.color = '#333';
     inputL.textContent = '0';
+
+    items.limit += 1;
+    UpdateInfo();
 
     function Generate() {
         items.ax = items.a;
@@ -263,15 +364,16 @@ function ResetSquareBased() {
 
     switch (settings.mode) {
         case 'Q':
-            generatedL.textContent = `${items.a}²`;
+            generated = `${items.a}²`;
             items.result = items.a ** 2;
             break;
         case 'R':
         case 'O':
-            generatedL.textContent = `√${items.a}`;
+            generated = `√${items.a}`;
             items.result = Math.sqrt(items.a);
             break;
     }
+    generatedL.textContent = generated;
     if (settings.v) {
         inputL.textContent = settings.mode === 'R' 
             ? items.result.toFixed(2)
@@ -296,12 +398,25 @@ function CheckSquareBased() {
 }
 
 function CheckUserInput(cond) {
+    if (settings.limit > 0 || settings.time > 0) {
+        items.inputs.push([generated, inputL.textContent, cond]);
+        if (settings.limit > 0 && items.limit >= settings.limit) {
+            if (settings.time > 0) {
+                clearInterval(timerIntervalId);
+            }
+            ShowScore();
+            return;
+        }
+        settings.Reset();
+        return;
+    }
+
     if (cond) {
         inputL.style.color = '#2a2';
         setTimeout(settings.Reset, 600);
-    } else {
-        inputL.style.color = '#f22';
+        return;
     }
+    inputL.style.color = '#f22';
 }
 
 function GetPerfectSquaredNumber(length) {
@@ -367,4 +482,64 @@ function GetRandomNumber(length) {
 
 function GetRandomItem(list) {
     return list[Math.floor(Math.random() * list.length)];
+}
+
+function ShowScore() {
+    beginSceneL.hidden = true;
+    mainSceneL.hidden = true;
+    endSceneL.hidden = false;
+
+    const timePassed = Math.floor((performance.now() - beginTimePoint) / 1000);
+    const correctAnswers = items.inputs.filter(item => item[2]).length;
+    
+
+    scoreL.textContent = `
+        ${(correctAnswers / items.limit * 100).toFixed(2)}%
+    `;
+    subscoreL.textContent = `
+        ${correctAnswers} out of ${items.limit} question${items.limit > 1 ? 's' : ''} ·
+        in ${SecondsToString(timePassed)}
+    `;
+    
+    listL.innerHTML = '';
+    for (let i = 0; i < items.inputs.length; ++i) {
+        let item = items.inputs[i];
+        listL.innerHTML += `<div${!item[2] ? ' class="wrong"' : ''}>${item[0]} = ${item[1]}</div>`;
+    }
+}
+
+function SecondsToString(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    let str = '';
+    if (m > 0) {
+        str += `${m} minute`;
+        if (m > 1) {
+            str += 's';
+        }
+        str += ' ';
+    }
+    str += `${s} second`;
+    if (s > 1) {
+        str += 's';
+    }
+    return str;
+}
+
+function SecondsToClock(seconds) {
+    const s = seconds % 60;
+    let str = Math.floor(seconds / 60);
+    str += ':';
+    str += s < 10 ? `0${s}` : s;
+    return str;
+}
+
+function UpdateInfo() {
+    infoL.textContent = '';
+    if (settings.limit > 0) {
+        infoL.textContent += `${items.limit}/${settings.limit} `;
+    }
+    if (settings.time > 0) {
+        infoL.textContent += `${SecondsToClock(items.time)}`;        
+    }
 }
