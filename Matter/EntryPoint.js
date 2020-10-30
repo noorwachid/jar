@@ -43,7 +43,7 @@ function EntryPoint() {
                 UpdateInfo();
                 --items.time;
                 if (items.time < 0) {
-                    clearInterval(intervalId);
+                    clearInterval(timerIntervalId);
                     settings.Check();
                     ShowScore();
                 }
