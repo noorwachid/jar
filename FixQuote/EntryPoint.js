@@ -14,8 +14,8 @@ function EntryPoint()
         outputL.value = Equalize(inputL.value);
     });
     clearL.addEventListener('click', ev => {
-        inputL.textContent = '';
-        outputL.textContent = '';
+        inputL.value = '';
+        outputL.value = '';
     });
     copyOutputL.addEventListener('click', ev => {
         outputL.select();
