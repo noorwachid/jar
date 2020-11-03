@@ -519,9 +519,11 @@ function SecondsToString(seconds) {
         }
         str += ' ';
     }
-    str += `${s} second`;
-    if (s > 1) {
-        str += 's';
+    if (s > 0) {
+        str += `${s} second`;
+        if (s > 1) {
+            str += 's';
+        }
     }
     return str;
 }

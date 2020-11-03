@@ -14,7 +14,9 @@ echo '    <header>Jar</header>' >> index.html
 echo '    <main>' >> index.html
 echo '        <ul>' >> index.html
 
-find . -mindepth 1 -maxdepth 1 -type d -not -path '*.git*' -print0 | xargs -I {} -r0 echo '<li><a href="{}">{}</a></li>' >> index.html
+find . -mindepth 1 -maxdepth 1 -type d -not -path '*.git*' -print0 \
+    | sed 's/\.\///g' \
+    | xargs -I {} -r0 echo '<li><a href="{}">{}</a></li>' >> index.html
 
 echo '        </ul>' >> index.html
 echo '    </main>' >> index.html
