@@ -9,6 +9,8 @@ const sourceL = document.getElementById('source');
 
 const sliderL = document.getElementById('slider');
 const infoL = document.getElementById('info');
+const playPauseButtonL = document.getElementById('play-pause-button');
+const stopButtonL = document.getElementById('stop-button');
 
 let words = [];
 let index = 0;
@@ -34,6 +36,14 @@ function EntryPoint()
     });
 
     sliderL.addEventListener('change', SliderHandler);
+    playPauseButtonL.addEventListener('click', ev => {
+        if (isPaused) {
+            StartHandler();
+        } else {
+            PauseHandler();
+        }
+    });
+    stopButtonL.addEventListener('click', StopHandler);
     
     addEventListener('keydown', ev => {
         if (isRunning) {
@@ -79,37 +89,9 @@ function EntryPoint()
 
 function SplitIntoWords(text)
 {
-    let words = [];
     let previousI = 0;
-    for (let i = 0; i < text.length; ++i)
-    {
-        switch (text[i])
-        {
-            case '!':
-            case '?':
-                words.push(text.substr(previousI, i - previousI + 1));
-                if (text[i + 1] === ' ') 
-                {
-                    i++;
-                }
-                previousI = i;
-                break;
-
-            case ' ':
-                words.push(text.substr(previousI, i - previousI));
-                previousI = i;
-                break;
-        }
-    }
-    if (previousI == 0)
-    {
-        return [text];
-    }
-    if (previousI > 0 && previousI + 1 < text.length) 
-    {
-        words.push(text.substr(previousI + 1));
-        return words;
-    }
+    words = text.split(' ');
+    return words;
 }
 
 function GoHandler()
@@ -142,6 +124,8 @@ function UpdateDisplay()
 
 function StartHandler()
 {
+    playPauseButtonL.className = 'icon-pause';
+
     infoL.textContent = '';
     isPaused = false;
     timerId = setInterval(() => {
@@ -153,6 +137,8 @@ function StartHandler()
 
 function PauseHandler()
 {
+    playPauseButtonL.className = 'icon-play';
+
     const wordLength = sourceL.value.length / 5;
     const wordReadLength = wordLength * Number(sliderL.value);
     const readTime = (wordLength - wordReadLength) / Number(wpmInputL.value);
