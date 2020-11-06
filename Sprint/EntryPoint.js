@@ -8,6 +8,7 @@ const displayL = document.getElementById('display');
 const sourceL = document.getElementById('source');
 
 const sliderL = document.getElementById('slider');
+const infoL = document.getElementById('info');
 
 let words = [];
 let index = 0;
@@ -141,6 +142,7 @@ function UpdateDisplay()
 
 function StartHandler()
 {
+    infoL.textContent = '';
     isPaused = false;
     timerId = setInterval(() => {
         ++index;
@@ -151,6 +153,10 @@ function StartHandler()
 
 function PauseHandler()
 {
+    const wordLength = sourceL.value.length / 5;
+    const wordReadLength = wordLength * Number(sliderL.value);
+    const readTime = (wordLength - wordReadLength) / Number(wpmInputL.value);
+    infoL.textContent = `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''} left`;
     isPaused = true;
     clearInterval(timerId);
 }
