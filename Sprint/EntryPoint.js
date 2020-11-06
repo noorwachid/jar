@@ -84,10 +84,6 @@ function SplitIntoWords(text)
     {
         switch (text[i])
         {
-            case ',':
-            case '.':
-            case ';':
-            case ':':
             case '!':
             case '?':
                 words.push(text.substr(previousI, i - previousI + 1));
