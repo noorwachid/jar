@@ -76,12 +76,51 @@ function EntryPoint()
     });
 }
 
+function SplitIntoWords(text)
+{
+    let words = [];
+    let previousI = 0;
+    for (let i = 0; i < text.length; ++i)
+    {
+        switch (text[i])
+        {
+            case ',':
+            case '.':
+            case ';':
+            case ':':
+            case '!':
+            case '?':
+                words.push(text.substr(previousI, i - previousI + 1));
+                if (text[i + 1] === ' ') 
+                {
+                    i++;
+                }
+                previousI = i;
+                break;
+
+            case ' ':
+                words.push(text.substr(previousI, i - previousI));
+                previousI = i;
+                break;
+        }
+    }
+    if (previousI == 0)
+    {
+        return [text];
+    }
+    if (previousI > 0 && previousI + 1 < text.length) 
+    {
+        words.push(text.substr(previousI + 1));
+        return words;
+    }
+}
+
 function GoHandler()
 {
     setSceneL.hidden = true;
     runSceneL.hidden = false;
 
-    words = sourceL.value.split(' ');
+    words = SplitIntoWords(sourceL.value);
     index = 0;
     speed = Number(wpmInputL.value);
     speed = speed ? (1 / (speed / 60) * 1000) : 200;
