@@ -36,13 +36,8 @@ function EntryPoint()
     });
 
     sliderL.addEventListener('change', SliderHandler);
-    playPauseButtonL.addEventListener('click', ev => {
-        if (isPaused) {
-            StartHandler();
-        } else {
-            PauseHandler();
-        }
-    });
+    playPauseButtonL.addEventListener('click', ToggleHandler);
+    displayL.addEventListener('click', ToggleHandler);
     stopButtonL.addEventListener('click', StopHandler);
     
     addEventListener('keydown', ev => {
@@ -50,11 +45,7 @@ function EntryPoint()
             switch (ev.key) {
                 case ' ':
                     ev.preventDefault();
-                    if (isPaused) {
-                        StartHandler();
-                    } else {
-                        PauseHandler();
-                    }
+                    ToggleHandler();
                     break;
                 case 'Escape':
                     ev.preventDefault();
@@ -90,8 +81,19 @@ function EntryPoint()
 function SplitIntoWords(text)
 {
     let previousI = 0;
-    words = text.split(' ');
-    return words;
+    const temp1 = text.split(' ');
+    const temp2 = [];
+    temp1.forEach(word => {
+        if (word.length < 15) {
+            temp2.push(word);
+        } else {
+            for (let i = 0; i < word.length; i += 10) {
+                const ix = i + 10;
+                temp2.push(word.substr(i, ix) + (ix < word.length ? '—' : ''));
+            }
+        }
+    });
+    return temp2;
 }
 
 function GoHandler()
@@ -112,7 +114,10 @@ function GoHandler()
 
 function UpdateDisplay()
 {
-    displayL.textContent = words[index];
+    if (words[index]) {
+        FormatWord(words[index]);
+    }
+
     const percentage = index / (words.length - 1);
     slider.value = percentage;
 
@@ -122,7 +127,29 @@ function UpdateDisplay()
     }
 }
 
-function StartHandler()
+function FormatWord(word)
+{
+    const needleL = document.createElement('em');
+    const wordL = document.createElement('span');
+    const mid = Math.round(word.length / 4);
+
+    needleL.textContent = word[mid];
+    wordL.append(word.substr(0, mid));
+    wordL.appendChild(needleL);
+    wordL.append(word.substr(mid + 1));
+    displayL.textContent = '';
+    displayL.appendChild(wordL);
+
+    const displayR = displayL.getBoundingClientRect();
+    const wordR = wordL.getBoundingClientRect();
+    const needleR = needleL.getBoundingClientRect();
+
+    const distance = needleR.x - wordR.x;
+    const localMid = displayR.width / 4;
+    wordL.style.left = (localMid - distance) + 'px';
+}
+
+function PlayHandler()
 {
     playPauseButtonL.className = 'icon-pause';
 
@@ -145,6 +172,15 @@ function PauseHandler()
     infoL.textContent = `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''} left`;
     isPaused = true;
     clearInterval(timerId);
+}
+
+function ToggleHandler() 
+{
+    if (isPaused) {
+        PlayHandler();
+    } else {
+        PauseHandler();
+    }
 }
 
 function StopHandler()
