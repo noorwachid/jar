@@ -164,7 +164,6 @@ function FormatWord(word)
 function PlayHandler()
 {
     playPauseButtonL.className = 'icon-pause';
-    displayDetailsL.hidden = true;
     isPaused = false;
 
     timerId = setInterval(() => {
@@ -185,7 +184,6 @@ function GetReadTime()
 function PauseHandler()
 {
     playPauseButtonL.className = 'icon-play';
-    displayDetailsL.hidden = false;
     infoL.textContent = GetReadTime() + ' left';
     isPaused = true;
     clearInterval(timerId);
