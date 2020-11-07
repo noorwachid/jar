@@ -22,8 +22,8 @@ let isPaused = false;
 
 function EntryPoint()
 {
-    setSceneL.hidden = false;
-    runSceneL.hidden = true;
+    setSceneL.style.display = 'block';
+    runSceneL.style.display = 'none';
 
     goButtonL.addEventListener('click', GoHandler);
 
@@ -109,8 +109,8 @@ function SplitIntoWords(text)
 
 function GoHandler()
 {
-    setSceneL.hidden = true;
-    runSceneL.hidden = false;
+    setSceneL.style.display = 'none';
+    runSceneL.style.display = 'flex';
 
     words = SplitIntoWords(sourceL.value);
     index = 0;
@@ -200,8 +200,8 @@ function ToggleHandler()
 
 function StopHandler()
 {
-    setSceneL.hidden = false;
-    runSceneL.hidden = true;
+    setSceneL.style.display = 'block';
+    runSceneL.style.display = 'none';
     isRunning = false;
     clearInterval(timerId);
 }

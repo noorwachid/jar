@@ -38,19 +38,30 @@ button {
     margin-bottom: 10px;
 }
 
+#run-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
 #display {
+    width: 100%;
     font-size: 50px;
     line-height: 60px;
     height: 60px;
-    margin-top: 80px;
     margin-bottom: 30px;
+}
+#display-details {
+    width: 100%;
 }
 #display span {
     position: relative;
 }
 #display em {
     font-style: normal;
-    color: #f22;
+    color: #2ff;
 }
 #slider {
     display: block;
