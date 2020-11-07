@@ -8,6 +8,7 @@ const displayL = document.getElementById('display');
 const sourceL = document.getElementById('source');
 
 const sliderL = document.getElementById('slider');
+const displayDetailsL = document.getElementById('display-details');
 const infoL = document.getElementById('info');
 const playPauseButtonL = document.getElementById('play-pause-button');
 const stopButtonL = document.getElementById('stop-button');
@@ -29,7 +30,7 @@ function EntryPoint()
     estimateButtonL.addEventListener('mouseover', ev => {
         const wordLength = sourceL.value.length / 5;
         const readTime = wordLength / Number(wpmInputL.value);
-        estimateButtonL.textContent = `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''}`;
+        estimateButtonL.textContent = GetReadTime();
     });
     estimateButtonL.addEventListener('mouseout', ev => {
         estimateButtonL.textContent = 'Estimate';
@@ -83,14 +84,24 @@ function SplitIntoWords(text)
     let previousI = 0;
     const temp1 = text.split(' ');
     const temp2 = [];
-    temp1.forEach(word => {
-        if (word.length < 15) {
-            temp2.push(word);
-        } else {
-            for (let i = 0; i < word.length; i += 10) {
-                const ix = i + 10;
-                temp2.push(word.substr(i, ix) + (ix < word.length ? '—' : ''));
+    temp1.forEach(item => {
+        function CutWord(word)
+        {
+            if (word.length < 15) {
+                temp2.push(word);
+            } else {
+                for (let i = 0; i < word.length; i += 10) {
+                    const ix = i + 10;
+                    temp2.push(word.substr(i, ix) + (ix < word.length ? '—' : ''));
+                }
             }
+        }
+        if (/\n/.test(item)) {
+            item.split('\n').forEach(newItem => {
+                CutWord(newItem);
+            });
+        } else {
+            CutWord(item);
         }
     });
     return temp2;
@@ -108,6 +119,7 @@ function GoHandler()
 
     isRunning = true;
     isPaused = true;
+    infoL.textContent = GetReadTime() + ' left';
 
     UpdateDisplay();
 }
@@ -152,9 +164,9 @@ function FormatWord(word)
 function PlayHandler()
 {
     playPauseButtonL.className = 'icon-pause';
-
-    infoL.textContent = '';
+    displayDetailsL.hidden = true;
     isPaused = false;
+
     timerId = setInterval(() => {
         ++index;
         UpdateDisplay();
@@ -162,14 +174,19 @@ function PlayHandler()
     UpdateDisplay();
 }
 
-function PauseHandler()
+function GetReadTime()
 {
-    playPauseButtonL.className = 'icon-play';
-
     const wordLength = sourceL.value.length / 5;
     const wordReadLength = wordLength * Number(sliderL.value);
     const readTime = (wordLength - wordReadLength) / Number(wpmInputL.value);
-    infoL.textContent = `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''} left`;
+    return `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''}`;
+}
+
+function PauseHandler()
+{
+    playPauseButtonL.className = 'icon-play';
+    displayDetailsL.hidden = false;
+    infoL.textContent = GetReadTime() + ' left';
     isPaused = true;
     clearInterval(timerId);
 }
@@ -187,7 +204,6 @@ function StopHandler()
 {
     setSceneL.hidden = false;
     runSceneL.hidden = true;
-    displayL.textContent = '';
     isRunning = false;
     clearInterval(timerId);
 }
