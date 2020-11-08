@@ -17,6 +17,7 @@ let words = [];
 let index = 0;
 let speed = 0;
 let timerId = 0;
+let timerInfoId = 0;
 let isRunning = false;
 let isPaused = false;
 
@@ -119,9 +120,9 @@ function GoHandler()
 
     isRunning = true;
     isPaused = true;
-    infoL.textContent = GetReadTime() + ' left';
 
     UpdateDisplay();
+    UpdateInfo();
 }
 
 function UpdateDisplay()
@@ -136,7 +137,16 @@ function UpdateDisplay()
     if (index > words.length) 
     {
         PauseHandler();
+        UpdateInfo(true);
     }
+}
+function UpdateInfo(isDone)
+{
+    const percentage = isDone ? '100.0%' : (index / words.length * 100).toFixed(1);
+    infoL.textContent = `
+        ${percentage}% 
+        ${GetReadTime()} left
+    `;
 }
 
 function FormatWord(word)
@@ -170,6 +180,7 @@ function PlayHandler()
         ++index;
         UpdateDisplay();
     }, speed);
+    timerInfoId = setInterval(UpdateInfo, 1000);
     UpdateDisplay();
 }
 
@@ -184,9 +195,9 @@ function GetReadTime()
 function PauseHandler()
 {
     playPauseButtonL.className = 'icon-play';
-    infoL.textContent = GetReadTime() + ' left';
     isPaused = true;
     clearInterval(timerId);
+    clearInterval(timerInfoId);
 }
 
 function ToggleHandler() 
@@ -203,7 +214,10 @@ function StopHandler()
     setSceneL.style.display = 'block';
     runSceneL.style.display = 'none';
     isRunning = false;
+
+    UpdateInfo(true);
     clearInterval(timerId);
+    clearInterval(timerInfoId);
 }
 
 function SliderHandler()
