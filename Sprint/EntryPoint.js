@@ -15,7 +15,7 @@ const stopButtonL = document.getElementById('stop-button');
 
 let words = [];
 let index = 0;
-let speed = 0;
+let speedInMs = 0;
 let timerId = 0;
 let timerInfoId = 0;
 let isRunning = false;
@@ -110,16 +110,21 @@ function SplitIntoWords(text)
 
 function GoHandler()
 {
+    sliderL.value = 0;
     setSceneL.style.display = 'none';
     runSceneL.style.display = 'flex';
 
     words = SplitIntoWords(sourceL.value);
     index = 0;
-    speed = Number(wpmInputL.value);
-    speed = speed ? (1 / (speed / 60) * 1000) : 200;
+
+    let speed = Number(wpmInputL.value);
+    if (speed < 1) {
+        speed = 1;
+    }
+    speedInMs   = speed ? (1 / (speed / 60) * 1000) : 200;
 
     isRunning = true;
-    isPaused = true;
+    isPaused  = true;
 
     UpdateDisplay();
     UpdateInfo();
@@ -145,7 +150,7 @@ function UpdateInfo(isDone)
     const percentage = isDone ? '100.0%' : (index / words.length * 100).toFixed(1);
     infoL.textContent = `
         ${percentage}% 
-        ${GetReadTime()} left
+        ${GetReadTime(true)} left
     `;
 }
 
@@ -179,16 +184,23 @@ function PlayHandler()
     timerId = setInterval(() => {
         ++index;
         UpdateDisplay();
-    }, speed);
+    }, speedInMs);
     timerInfoId = setInterval(UpdateInfo, 1000);
     UpdateDisplay();
 }
 
-function GetReadTime()
+function GetReadTime(isMoving)
 {
-    const wordLength = sourceL.value.length / 5;
-    const wordReadLength = wordLength * Number(sliderL.value);
-    const readTime = (wordLength - wordReadLength) / Number(wpmInputL.value);
+    const totalWordLength = sourceL.value.length / 5;
+    let speed = Number(wpmInputL.value);
+    if (speed < 1) {
+        speed = 1;
+    }
+    let readTime = totalWordLength / speed;
+    if (isMoving) { 
+        const wordReadLength = totalWordLength * Number(sliderL.value);
+        readTime = (totalWordLength - wordReadLength) / speed;
+    }
     return `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''}`;
 }
 
