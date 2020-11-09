@@ -219,6 +219,7 @@ function ToggleHandler()
     } else {
         PauseHandler();
     }
+    UpdateInfo();
 }
 
 function StopHandler()
