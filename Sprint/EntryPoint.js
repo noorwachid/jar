@@ -85,48 +85,10 @@ function EntryPoint()
 
 function SplitIntoWords(text)
 {
-    text += '\n';
-        
-    let list = [];
-    let length = text.length;
-    let i = 0, ix = 0, iz = 0;
-    let char = text[ix];
-
-    let isBlankSpace = () => (
-        char === ' ' || 
-        char === '\n' ||
-        char === '\t' ||
-        char === '\r'
-    );
-
-    while (isBlankSpace()) {
-        ++ix;
-        char = text[ix];
-    }
-
-    for (let i = ix; i < length; ++i)
-    {
-        char = text[i];
-        if (isBlankSpace()) {
-            while (isBlankSpace()) {
-                ++i;
-                char = text[i];
-            }
-            let size = iz - ix + 1;
-            let word = text.substr(ix, size); 
-            if (size > 15) {
-                for (let j = 10, jx = 0; jx < size; j += 10) {
-                    let part = word.substr(jx, j - jx);
-                    if (j < size) part += '-';
-                    list.push(part)
-                    jx = j;
-                } 
-            } else list.push(word);
-            ix = i;
-        } else iz = i;
-    }
-
-    return list;
+    return text
+        .replace(/^\s*/, '')
+        .replace(/\s*$/, '')
+        .split(/\s+/);
 }
 
 function GoHandler()
