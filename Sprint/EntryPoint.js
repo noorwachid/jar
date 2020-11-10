@@ -42,6 +42,9 @@ function EntryPoint()
     displayL.addEventListener('click', ToggleHandler);
     stopButtonL.addEventListener('click', StopHandler);
     
+    addEventListener('resize', ev => {
+        UpdateDisplay();
+    });
     addEventListener('keydown', ev => {
         if (isRunning) {
             switch (ev.key) {
@@ -82,30 +85,42 @@ function EntryPoint()
 
 function SplitIntoWords(text)
 {
-    let previousI = 0;
-    const temp1 = text.split(' ');
-    const temp2 = [];
-    temp1.forEach(item => {
-        function CutWord(word)
-        {
-            if (word.length < 15) {
-                temp2.push(word);
-            } else {
-                for (let i = 0; i < word.length; i += 10) {
-                    const ix = i + 10;
-                    temp2.push(word.substr(i, ix) + (ix < word.length ? '—' : ''));
-                }
+    text += '\n';
+        
+    let list = [];
+    let length = text.length;
+
+    for (let i = 0, ix = 0, iz = 0; i < length; ++i)
+    {
+        let char = text[i];
+        let isBlankSpace = () => (
+            char === ' ' || 
+            char === '\n' ||
+            char === '\t' ||
+            char === '\r'
+        );
+
+        if (isBlankSpace()) {
+            while (isBlankSpace()) {
+                ++i;
+                char = text[i];
             }
-        }
-        if (/\n/.test(item)) {
-            item.split('\n').forEach(newItem => {
-                CutWord(newItem);
-            });
-        } else {
-            CutWord(item);
-        }
-    });
-    return temp2;
+            let size = iz - ix + 1;
+            let word = text.substr(ix, size); 
+            if (size > 15) {
+                for (let j = 10, jx = 0; jx < size; j += 10) {
+                    console.log(jx, j, size);
+                    let part = word.substr(jx, j - jx);
+                    if (j < size) part += '-';
+                    list.push(part)
+                    jx = j;
+                } 
+            } else list.push(word);
+            ix = i;
+        } else iz = i;
+    }
+
+    return list;
 }
 
 function GoHandler()
