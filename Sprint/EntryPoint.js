@@ -109,7 +109,6 @@ function SplitIntoWords(text)
             let word = text.substr(ix, size); 
             if (size > 15) {
                 for (let j = 10, jx = 0; jx < size; j += 10) {
-                    console.log(jx, j, size);
                     let part = word.substr(jx, j - jx);
                     if (j < size) part += '-';
                     list.push(part)
