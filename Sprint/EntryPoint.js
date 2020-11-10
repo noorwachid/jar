@@ -89,17 +89,24 @@ function SplitIntoWords(text)
         
     let list = [];
     let length = text.length;
+    let i = 0, ix = 0, iz = 0;
+    let char = text[ix];
 
-    for (let i = 0, ix = 0, iz = 0; i < length; ++i)
+    let isBlankSpace = () => (
+        char === ' ' || 
+        char === '\n' ||
+        char === '\t' ||
+        char === '\r'
+    );
+
+    while (isBlankSpace()) {
+        ++ix;
+        char = text[ix];
+    }
+
+    for (let i = ix; i < length; ++i)
     {
-        let char = text[i];
-        let isBlankSpace = () => (
-            char === ' ' || 
-            char === '\n' ||
-            char === '\t' ||
-            char === '\r'
-        );
-
+        char = text[i];
         if (isBlankSpace()) {
             while (isBlankSpace()) {
                 ++i;
