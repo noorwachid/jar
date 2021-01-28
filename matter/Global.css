@@ -10,7 +10,7 @@ body {
     user-select: none;
     background-color: #1E2326;
     color: #f9f9f9;
-    font-family: "Noto Sans", "Roboto", "Segoe UI", "Arial" sans-serif;
+    font-family: "Noto Sans", "Roboto", "Segoe UI", "Arial", sans-serif;
 }
 
 #begin-scene,
