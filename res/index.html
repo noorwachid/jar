@@ -27,7 +27,13 @@
 <body>
     <main id="text"></main>
     <script>
-         document.getElementById('text').textContent = innerWidth + 'x' + innerHeight;
+        function UpdateText()
+        {
+            document.getElementById('text').textContent = innerWidth + 'x' + innerHeight;
+        }
+        
+        UpdateText();
+        addEventListener('onresize', UpdateText);
     </script>
 </body>
 </html>
