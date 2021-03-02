@@ -11,22 +11,23 @@
             padding: 0px;
         }
         body {
+            width: 100%;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         main {
             font-family: sans-serif;
-            font-size: 22px;
+            font-size: 32px;
             color: #F9660C;
         }
     </style>
 </head>
 <body>
-    <main>
-        <script>
-            document.write(innerWidth + 'x' innerHeight);
-        </script>
-    </main>
+    <main id="text"></main>
+    <script>
+        document.getElementById('#text').textContent = innerWidth + 'x' innerHeight;
+    </script>
 </body>
 </html>
