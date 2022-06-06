@@ -85,10 +85,14 @@ function EntryPoint()
 
 function SplitIntoWords(text)
 {
-    return text
-        .replace(/^\s*/, '')
-        .replace(/\s*$/, '')
-        .split(/\s+/);
+    const trimmed = text.replace(/^\s*/, '').replace(/\s*$/, '');
+    const duplicated = trimmed
+        .replace(/\s+/, ' ')
+        .replace(/\t+/, ' ')
+        .replace(/\n+/, ' \n ')
+        .replace(/([^\s]+)\.\s*/, '$1. $1. ');
+    
+    return duplicated.split(' ');
 }
 
 function GoHandler()
@@ -130,7 +134,7 @@ function UpdateDisplay()
 }
 function UpdateInfo(isDone)
 {
-    const percentage = isDone ? '100.0%' : (index / words.length * 100).toFixed(1);
+    const percentage = isDone ? '100.0' : (index / words.length * 100).toFixed(1);
     infoL.textContent = `
         ${percentage}% 
         ${GetReadTime(true)} left
