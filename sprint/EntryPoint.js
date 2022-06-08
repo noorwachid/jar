@@ -95,10 +95,10 @@ function SplitIntoWords(text)
     const spacer = '<~>';
     const trimmed = text.replace(/^\s*/, '').replace(/\s*$/, '');
     const duplicated = trimmed
-        .replace(/\n+/, ' ' + spacer + ' ')
-        .replace(/\t+/, ' ')
-        .replace(/\s+/, ' ')
-        .replace(/([^\s]+)([\.\?!])\s*/, '$1$2 $1$2 ');
+        .replaceAll(/\n+/g, ' ' + spacer + ' ')
+        .replaceAll(/\t+/g, ' ')
+        .replaceAll(/\s+/g, ' ')
+        .replaceAll(/([^\s]+)([\.\?!])\s*/g, '$1$2 $1$2 ');
     
     return duplicated.split(/\s/).map(function (word) {
         return word !== spacer ? word : '';
