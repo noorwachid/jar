@@ -92,7 +92,7 @@ function SplitIntoWords(text)
         .replace(/\n+/, ' \n ')
         .replace(/([^\s]+)\.\s*/, '$1. $1. ');
     
-    return duplicated.split(' ');
+    return duplicated.split(/\s/);
 }
 
 function GoHandler()
