@@ -90,7 +90,7 @@ function SplitIntoWords(text)
         .replace(/\s+/, ' ')
         .replace(/\t+/, ' ')
         .replace(/\n+/, ' \n ')
-        .replace(/([^\s]+)\.\s*/, '$1. $1. ');
+        .replace(/([^\s]+)([\.\?!])\s*/, '$1$2 $1$2 ');
     
     return duplicated.split(/\s/);
 }
