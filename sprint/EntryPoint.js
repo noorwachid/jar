@@ -11,8 +11,11 @@ const sourceL = document.getElementById('source');
 const sliderL = document.getElementById('slider');
 const displayDetailsL = document.getElementById('display-details');
 const infoL = document.getElementById('info');
+const infoPercentageL = document.getElementById('info-percentage');
+const infoTimeL = document.getElementById('info-time');
 const playPauseButtonL = document.getElementById('play-pause-button');
 const stopButtonL = document.getElementById('stop-button');
+const wordIndexL = document.getElementById('word-index');
 
 let words = [];
 let index = 0;
@@ -39,6 +42,8 @@ function EntryPoint()
     });
 
     popupButtonL.addEventListener('click', PopupHandler);
+
+    wordIndexL.addEventListener('input', WordIndexHandler);
 
     sliderL.addEventListener('change', SliderHandler);
     playPauseButtonL.addEventListener('click', ToggleHandler);
@@ -153,10 +158,10 @@ function UpdateDisplay()
 function UpdateInfo(isDone)
 {
     const percentage = isDone ? '100.0' : (index / words.length * 100).toFixed(1);
-    infoL.textContent = `
-        ${percentage}% 
-        ${GetReadTime(true)} left
-    `;
+    
+    infoPercentageL.textContent = `${percentage}%`;
+    infoTimeL.textContent = `${GetReadTime(true)} left`;
+    wordIndexL.value = index;
 }
 
 function FormatWord(word)
@@ -241,5 +246,13 @@ function StopHandler()
 function SliderHandler()
 {
     index = Math.floor(Number(sliderL.value) * (words.length - 1));
+    UpdateDisplay();
+}
+
+function WordIndexHandler() 
+{
+    index = Math.floor(Number(wordIndexL.value));
+    index = Math.min(index, words.length);
+    index = Math.max(index, 0);
     UpdateDisplay();
 }

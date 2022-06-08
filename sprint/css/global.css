@@ -39,6 +39,7 @@ button {
     color: #fff;
     border-width: 0px;
     padding: 10px 15px;
+    outline: 0;
 }
 
 button {
@@ -73,7 +74,7 @@ button {
 }
 #slider {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 17px;
 
     -webkit-appearance: none;
     width: 100%;
@@ -106,7 +107,19 @@ button {
 
 #media-controls,
 #info {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
     color: #666;
+}
+#info-percentage {
+    margin-right: 10px;
+}
+#word-index {
+    margin-left: 5px;
+    margin-right: 15px;
+    width: 100px;
+    padding: 5px 10px;
 }
 
 @media (max-width: 700px) {
