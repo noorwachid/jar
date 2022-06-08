@@ -4,6 +4,7 @@ const runSceneL = document.getElementById('run-scene');
 const wpmInputL = document.getElementById('wpm-input');
 const goButtonL = document.getElementById('go-button');
 const estimateButtonL = document.getElementById('estimate-button');
+const popupButtonL = document.getElementById('popup-button');
 const displayL = document.getElementById('display');
 const sourceL = document.getElementById('source');
 
@@ -36,6 +37,8 @@ function EntryPoint()
     estimateButtonL.addEventListener('mouseout', ev => {
         estimateButtonL.textContent = 'Estimate';
     });
+
+    popupButtonL.addEventListener('click', PopupHandler);
 
     sliderL.addEventListener('change', SliderHandler);
     playPauseButtonL.addEventListener('click', ToggleHandler);
@@ -124,6 +127,14 @@ function GoHandler()
     UpdateInfo();
 }
 
+function PopupHandler()
+{
+    const height = 164;
+    const width = 353;
+
+    window.open(window.location,'winname', `directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=${width},height=${height}`);
+}
+
 function UpdateDisplay()
 {
     if (words[index]) {
@@ -195,7 +206,7 @@ function GetReadTime(isMoving)
         const wordReadLength = totalWordLength * Number(sliderL.value);
         readTime = (totalWordLength - wordReadLength) / speed;
     }
-    return `${readTime % 1 === 0 ? readTime : readTime.toFixed(2)} minute${readTime > 1 ? 's' : ''}`;
+    return `${readTime % 1 === 0 ? readTime : readTime.toFixed(1)}m`;
 }
 
 function PauseHandler()
