@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="cache-control" content="no-cache">
     <title>Timer</title>
-    <link rel="stylesheet" href="Global.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <main id="container">
@@ -18,14 +19,14 @@
                 <input type="text" id="input" placeholder="0" value="1:00">
             </div>
             <div class="pad">
-                <input type="button" id="button" value="GO">
+                <button class="button" id="go-button">Go</button>
             </div>
         </section>
     </main>
 
-    <script src="EntryPoint.js"></script>
+    <script src="index.js"></script>
     <script>
-        EntryPoint();
+        main();
     </script>
 </body>
 </html>

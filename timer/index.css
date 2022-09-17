@@ -33,14 +33,20 @@ main {
     background-color: transparent;
     border-width: 0px;
     color: #fff;
+    outline: 0;
+    margin-bottom: 10px;
 }
-#button {
+.button {
     color: #764ba2;
     background-color: #fff;
     border-width: 0px;
     border-radius: 25px;
     padding: 5px 20px;
     font-size: 25px;
+}
+.button:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
 }
 
 #timer,
